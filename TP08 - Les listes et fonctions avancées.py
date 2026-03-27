@@ -95,6 +95,7 @@ def mot_complet(mot, lettres_trouvees):
 mot = "python"
 lettres = ["p", "y", "t", "h", "o", "n"]
 #EXERCICE 10#PARTIE B: Mini projet type Pendu
+print("---------------EXO 6-----------------")
 #EXERCICE 6
 def afficher_mot_cache(mot, lettres_trouvees):
     resultat = ""
@@ -113,7 +114,6 @@ lettres_trouvees = ["p", "o"]
 
 resultat = afficher_mot_cache(mot, lettres_trouvees)
 print(resultat)
-
 
 print("--------------------------------")
 #EXERCICE 7
@@ -141,22 +141,131 @@ def mot_complet(mot, lettres_trouvees):
 mot = "python"
 lettres = ["p", "y", "t", "h", "o", "n"]
 #EXERCICE 10
-if __name__ == "__main__":
-    mot = "python"
-    lettres_trouvees = []
+mot = "python"
+lettres_trouvees = []
 
-    while not mot_complet(mot, lettres_trouvees):
-        print("Mot :", afficher_mot_cache(mot, lettres_trouvees))
-        lettre = input("Lettre ? : ").strip().lower()
-        if len(lettre) != 1 or not lettre.isalpha():
-            print("Veuillez entrer une seule lettre.")
-            continue
+while True:
+    lettre = input("Lettre ? : ")
+    lettres_trouvees.append(lettre)
 
+    mot_cache = ""
+    for l in mot:
+        if l in lettres_trouvees:
+            mot_cache += l
+        else:
+            mot_cache += "_"
+
+    print(mot_cache)
+
+    if "_" not in mot_cache:
+        print("Mot trouvé !")
+        break
+#BONUS
+def gerer_erreur(mot, lettre, vies):
+    vies = 5
+    if lettre not in mot:
+        if vies > 0:
+            vies -= 1
+            print(f"Lettre incorrecte. Il vous reste {vies} vies.")
+    return vies
+print("--------------------------------")
+#Bonus 2
+def afficher_etat(mot, lettres_trouvees, lettres_testees):
+    
+    mot_cache = ""
+    for lettre in mot:
         if lettre in lettres_trouvees:
-            print("Vous avez déjà trouvé cette lettre.")
-            continue
+            mot_cache += lettre
+        else:
+            mot_cache += "_"
+    
+    print("Mot :", mot_cache)
 
-        ajouter_lettre(lettres_trouvees, lettre)
+    
+    print("Lettres testées :", " ".join(lettres_testees))
+#bonus 3
+def lettre_deja_proposee(lettre, lettres_testees):
+    if lettre in lettres_testees:
+        return True
+    else:
+        return False
+#bonus 4 
+import random
 
-    print("Mot :", afficher_mot_cache(mot, lettres_trouvees))
-    print("Félicitations, vous avez trouvé PASSE-MURAILLE !")
+def choisir_mot(liste_mots):
+    return random.choice(liste_mots)
+#bonus 5
+def lettres_restantes(mot, lettres_trouvees):
+    restantes = 0
+    for lettre in mot:
+        if lettre not in lettres_trouvees:
+            restantes += 1
+    return restantes
+#bonus 6
+import random
+
+# Liste de mots
+mots = ["python", "reseau", "serveur", "code", "instruction",
+        "algorithmie", "boucle", "condition", "fonction", "indentation"]
+
+mot = random.choice(mots)
+
+
+lettres_trouvees = []
+lettres_testees = []
+vies = 3
+
+
+def afficher_etat(mot, lettres_trouvees, lettres_testees, vies):
+    mot_cache = ""
+    for lettre in mot:
+        if lettre in lettres_trouvees:
+            mot_cache += lettre
+        else:
+            mot_cache += "_"
+    
+    print("\n===== ÉTAT DU JEU =====")
+    print("Mot        :", mot_cache)
+    print("Testées    :", " ".join(lettres_testees))
+    print("Vies       :", vies)
+    print("========================")
+
+
+def lettre_deja_proposee(lettre, lettres_testees):
+    return lettre in lettres_testees
+
+
+while True:
+    afficher_etat(mot, lettres_trouvees, lettres_testees, vies)
+
+    
+    if all(l in lettres_trouvees for l in mot):
+        print("Mot trouvé !")
+        break
+
+    # Vérifier défaite
+    if vies <= 0:
+        print("Perdu ! Le mot était :", mot)
+        break
+
+    
+    lettre = input("Lettre ? : ").lower()
+
+    if len(lettre) != 1 or not lettre.isalpha():
+        print("Entrée invalide. Tape une seule lettre.")
+        continue
+
+    if lettre_deja_proposee(lettre, lettres_testees):
+        print("Lettre déjà proposée.")
+        continue
+
+    
+    lettres_testees.append(lettre)
+
+    
+    if lettre in mot:
+        lettres_trouvees.append(lettre)
+        print("Bonne lettre !")
+    else:
+        vies -= 1
+        print("Mauvaise lettre !")
